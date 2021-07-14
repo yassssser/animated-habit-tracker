@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker_flutter/constants/app_assets.dart';
-import 'package:habit_tracker_flutter/ui/task/animated_task.dart';
-import 'package:habit_tracker_flutter/ui/task/task_completion_ring.dart';
-import 'package:habit_tracker_flutter/ui/theming/app_theme.dart';
+import 'package:habit_tracker_flutter/models/task.dart';
+import 'package:habit_tracker_flutter/models/task_preset.dart';
+import 'package:habit_tracker_flutter/persistence/hive_data_store.dart';
+import 'package:habit_tracker_flutter/ui/home/tasks_grid_page.dart';
+import 'package:hive/hive.dart';
 
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppTheme.of(context).primary,
-      body: Center(
-          child: SizedBox(
-        width: 240,
-        child: AnimatedTask(
-          iconName: AppAssets.dog,
-        ),
-      )),
+    final dataStore = HiveDataStore();
+    return ValueListenableBuilder(
+      valueListenable: dataStore.tasksListenable(),
+      builder: (_, Box<Task> box, __) => TasksGridPage(
+        tasks: box.values.toList(),
+      ),
     );
   }
 }

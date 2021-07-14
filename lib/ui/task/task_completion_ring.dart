@@ -1,14 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-
-import '../theming/app_theme.dart';
+import 'package:habit_tracker_flutter/ui/theming/app_theme.dart';
 
 class TaskCompletionRing extends StatelessWidget {
-  TaskCompletionRing({Key key, @required this.progress}) : super(key: key);
-
+  const TaskCompletionRing({@required this.progress});
   final double progress;
-
   @override
   Widget build(BuildContext context) {
     final themeData = AppTheme.of(context);
@@ -16,43 +13,45 @@ class TaskCompletionRing extends StatelessWidget {
       aspectRatio: 1.0,
       child: CustomPaint(
         painter: RingPainter(
-            progress: progress,
-            taskNotCompletedColor: themeData.taskRing,
-            taskCompletedColor: themeData.accent),
+          progress: progress,
+          taskNotCompletedColor: themeData.taskRing,
+          taskCompletedColor: themeData.accent,
+        ),
       ),
     );
   }
 }
 
 class RingPainter extends CustomPainter {
+  RingPainter({
+    @required this.progress,
+    @required this.taskNotCompletedColor,
+    @required this.taskCompletedColor,
+  });
   final double progress;
   final Color taskNotCompletedColor;
   final Color taskCompletedColor;
 
-  RingPainter(
-      {@required this.progress,
-      @required this.taskNotCompletedColor,
-      @required this.taskCompletedColor});
   @override
   void paint(Canvas canvas, Size size) {
     final notCompleted = progress < 1.0;
-    final strockWidth = size.width / 15.0;
+    final strokeWidth = size.width / 15.0;
     final center = Offset(size.width / 2, size.height / 2);
     final radius =
-        notCompleted ? (size.width - strockWidth) / 2 : size.width / 2;
+        notCompleted ? (size.width - strokeWidth) / 2 : size.width / 2;
 
     if (notCompleted) {
-      final backGroundPaint = Paint()
+      final backgroundPaint = Paint()
         ..isAntiAlias = true
-        ..strokeWidth = strockWidth
+        ..strokeWidth = strokeWidth
         ..color = taskNotCompletedColor
         ..style = PaintingStyle.stroke;
-      canvas.drawCircle(center, radius, backGroundPaint);
+      canvas.drawCircle(center, radius, backgroundPaint);
     }
 
     final foregroundPaint = Paint()
       ..isAntiAlias = true
-      ..strokeWidth = strockWidth
+      ..strokeWidth = strokeWidth
       ..color = taskCompletedColor
       ..style = notCompleted ? PaintingStyle.stroke : PaintingStyle.fill;
     canvas.drawArc(
